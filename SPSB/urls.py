@@ -26,6 +26,7 @@ urlpatterns = [
     path('news/edit/<int:id>/', views.edit_post, name='edit_post'),
     path('news/delete/<int:id>/', views.delete_post, name='delete_post'),
     path('login/', views.login_view, name='login'),
+    path('logout/', views.logout_view, name='logout'),
 ]
 
 
