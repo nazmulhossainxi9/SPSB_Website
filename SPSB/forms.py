@@ -11,7 +11,7 @@ class NewsPostForm(forms.ModelForm):
     publish_now = forms.BooleanField(required=False)
     new_category = forms.CharField(required=False, max_length=100, widget=forms.TextInput(attrs={
         'class': 'form-control mt-2',
-        'placeholder': 'Or type a new category'
+        'placeholder': 'New Category'
     }))
 
     class Meta:

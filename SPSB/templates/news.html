@@ -33,21 +33,21 @@
                             </p>
                             <!-- Category -->
                             {% if post.category %}
-                                <span class="badge bg-primary mb-2">
+                                <span class="badge bg-primary mb-1">
                                     {{ post.category.name | title }}
                                 </span>
                             {% endif %}
                             {% if request.user.is_staff %}
                                 {% if post.status == "draft"%}
-                                    <span class="badge bg-warning mb-2">
+                                    <span class="badge bg-warning mb-1">
                                         {{ post.status | title }}
                                     </span>
                                     {% elif post.status == "published" %}
-                                        <span class="badge bg-success mb-2">
+                                        <span class="badge bg-success mb-1">
                                             {{ post.status | title }}
                                         </span>
                                     {% else %}
-                                        <span class="badge bg-danger mb-2">
+                                        <span class="badge bg-danger mb-1">
                                             {{ post.status | title }}
                                         </span>
                                 {% endif %}
@@ -55,7 +55,7 @@
 
                             <!-- Admin Buttons -->
                             {% if request.user.is_staff %}
-                                <span class="position-absolute end-0 mx-2" onclick="event.stopPropagation();">
+                                <span class="position-absolute end-0 mx-1" onclick="event.stopPropagation();">
                                     <a href="{% url 'edit_post' post.id %}" class="text-primary me-2">
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </a>

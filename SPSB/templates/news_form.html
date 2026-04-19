@@ -53,40 +53,40 @@
                     <div id="formset-container">
 
                         {% for form in formset %}
-                        <div class="section-block mb-4 formset-item">
+                            <div class="section-block mb-4 formset-item">
 
-                            {{ form.id }}
-                            {{ form.media.as_hidden }}
-                            {{ form.order }}
+                                {{ form.id }}
+                                {{ form.media.as_hidden }}
+                                {{ form.order }}
 
-                            <!-- IMAGE -->
-                            <div class="mb-2">
-                                <label>Section Image</label>
-                                {{ form.section_image }}
+                                <!-- IMAGE -->
+                                <div class="mb-2">
+                                    <label>Section Image</label>
+                                    {{ form.section_image }}
 
-                                {% if form.instance.media %}
-                                    <img src="{{ form.instance.media.file.url }}" class="preview-img mt-2">
-                                {% endif %}
+                                    {% if form.instance.media %}
+                                        <img src="{{ form.instance.media.file.url }}" class="preview-img mt-2">
+                                    {% endif %}
+                                </div>
+
+                                <!-- CAPTION -->
+                                <div class="mb-2">
+                                    <label>Caption</label>
+                                    {{ form.caption_override }}
+                                </div>
+
+                                <!-- TEXT -->
+                                <div class="mb-2">
+                                    <label>Content</label>
+                                    {{ form.section_text }}
+                                </div>
+
+                                <!-- DELETE -->
+                                <div class="text-danger">
+                                    {{ form.DELETE }} Delete Section
+                                </div>
+
                             </div>
-
-                            <!-- CAPTION -->
-                            <div class="mb-2">
-                                <label>Caption</label>
-                                {{ form.caption_override }}
-                            </div>
-
-                            <!-- TEXT -->
-                            <div class="mb-2">
-                                <label>Content</label>
-                                {{ form.section_text }}
-                            </div>
-
-                            <!-- DELETE -->
-                            <div class="text-danger">
-                                {{ form.DELETE }} Delete Section
-                            </div>
-
-                        </div>
                         {% endfor %}
 
                     </div>
@@ -110,9 +110,9 @@
                         <h6 class="mb-3">Status</h6>
                         <div class="status-buttons d-flex gap-2 flex-wrap">
                             {% for value, label in form.status.field.choices %}
-                            <label class="btn btn-outline-secondary status-btn {% if form.status.value == value %}active{% endif %}">
-                                <input type="radio" name="status" value="{{ label }}" {% if form.status.value == value %}checked{% endif %} class="d-none">
-                                {{ label }}
+                            <label class="btn btn-outline-secondary status-btn status-{{ value }} {% if form.status.value == value %}active{% endif %}" data-status="{{ value }}">
+                                <input type="radio" name="status" value="{{ value }}" {% if form.status.value == value %}checked{% endif %} class="d-none">
+                                {{ label | title }}
                             </label>
                             {% endfor %}
                         </div>
@@ -121,13 +121,12 @@
                     <!-- CATEGORY CARD -->
                     <div class="editor-card category-card mb-3 p-3">
                         <h6 class="mb-3">Category</h6>
-                        
                         <!-- Existing Categories -->
                         <div class="category-pills d-flex gap-2 flex-wrap mb-3">
                             {% for cat in form.category.field.queryset %}
                             <label class="btn btn-sm btn-outline-primary category-pill {% if form.category.value == cat.id %}active{% endif %}">
                                 <input type="radio" name="category" value="{{ cat.id }}" {% if form.category.value == cat.id %}checked{% endif %} class="d-none">
-                                {{ cat.name }}
+                                {{ cat.name | title }}
                             </label>
                             {% endfor %}
                         </div>
@@ -140,7 +139,7 @@
                     </div>
 
                     <!-- SAVE -->
-                    <button type="submit" class="btn btn-primary w-100 btn-lg">
+                    <button type="submit" class="btn btn-primary w-100 save-btn">
                         Save News
                     </button>
 
