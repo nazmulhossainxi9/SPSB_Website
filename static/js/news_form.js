@@ -7,55 +7,109 @@ document.addEventListener("DOMContentLoaded", function () {
     // STATUS SYSTEM (PRO CMS)
     // =========================
     function initStatusSystem() {
-    const buttons = document.querySelectorAll('.status-btn');
+        const buttons = document.querySelectorAll('.status-btn');
 
-    buttons.forEach(btn => {
-        const input = btn.querySelector('.status-input');
+        buttons.forEach(btn => {
+            const input = btn.querySelector('input[type="radio"]');
 
-        // Initial state (for edit page)
-        if (input.checked) {
-            btn.classList.add('active');
-        }
+            // Initial state (for edit page)
+            if (input && input.checked) {
+                btn.classList.add('active');
+            }
 
-        btn.addEventListener('click', function () {
+            btn.addEventListener('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
 
-            // 🔥 Clear all
-            buttons.forEach(b => {
-                b.classList.remove('active');
-                b.querySelector('.status-input').checked = false;
+                // 🔥 AJAX-style immediate feedback
+                // Remove active from all buttons
+                buttons.forEach(b => {
+                    b.classList.remove('active');
+                    const bInput = b.querySelector('input[type="radio"]');
+                    if (bInput) bInput.checked = false;
+                });
+
+                // Add active to clicked button with visual feedback
+                this.classList.add('active');
+                if (input) {
+                    input.checked = true;
+                    input.dispatchEvent(new Event('change', { bubbles: true }));
+                }
+
+                // Visual feedback - pulse animation
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
             });
-
-            // 🔥 Set current
-            this.classList.add('active');
-            input.checked = true;
         });
-    });
-}
+    }
 
     initStatusSystem();
 
 
-    // =========================
-    // CATEGORY SYSTEM
-    // =========================
-    document.querySelectorAll('.category-pill').forEach(pill => {
-        pill.addEventListener('click', function (e) {
-            e.preventDefault();
 
-            document.querySelectorAll('.category-pill').forEach(p => p.classList.remove('active'));
-            this.classList.add('active');
+    // =========================
+    // CATEGORY SYSTEM (AJAX-STYLE)
+    // =========================
+    function initCategorySystem() {
+        document.querySelectorAll('.category-pill').forEach(pill => {
+            const input = pill.querySelector('input[type="radio"]');
 
-            const newCatInput = document.querySelector('[name="new_category"]');
-            if (newCatInput) newCatInput.value = '';
+            // Initial state (for edit page)
+            if (input && input.checked) {
+                pill.classList.add('active');
+            }
+
+            pill.addEventListener('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                // 🔥 AJAX-style immediate feedback
+                // Remove active from all pills
+                document.querySelectorAll('.category-pill').forEach(p => {
+                    p.classList.remove('active');
+                    const pInput = p.querySelector('input[type="radio"]');
+                    if (pInput) pInput.checked = false;
+                });
+
+                // Add active to clicked pill
+                this.classList.add('active');
+                if (input) {
+                    input.checked = true;
+                    // Trigger change event for form validation
+                    input.dispatchEvent(new Event('change', { bubbles: true }));
+                }
+
+                // Clear new category input
+                const newCatInput = document.querySelector('[name="new_category"]');
+                if (newCatInput) {
+                    newCatInput.value = '';
+                    newCatInput.dispatchEvent(new Event('input', { bubbles: true }));
+                }
+
+                // Visual feedback - ensure styles are applied
+                this.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
+            });
         });
-    });
+    }
+
+    initCategorySystem();
 
 
     const newCatInput = document.querySelector('[name="new_category"]');
     if (newCatInput) {
         newCatInput.addEventListener('input', function () {
             if (this.value.trim()) {
-                document.querySelectorAll('.category-pill').forEach(p => p.classList.remove('active'));
+                // AJAX-style: immediately clear all active pills
+                document.querySelectorAll('.category-pill').forEach(p => {
+                    p.classList.remove('active');
+                    const pInput = p.querySelector('input[type="radio"]');
+                    if (pInput) pInput.checked = false;
+                });
             }
         });
     }

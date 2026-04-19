@@ -19,6 +19,8 @@ def home(request):
     return render(request, 'home.html')
 
 
+from django.core.paginator import Paginator
+
 def news(request):
     if request.user.is_staff:
         # Admin sees everything
@@ -27,8 +29,14 @@ def news(request):
         # Visitors see only published
         news_posts = NewsPost.objects.select_related('category').prefetch_related('post_media__media')
 
+    # Pagination
+    paginator = Paginator(news_posts, 9)  # Show 12 news per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     return render(request, 'news.html', {
-        'news_posts': news_posts
+        'page_obj': page_obj,
+        'news_posts': page_obj.object_list,  # Keep backward compatibility
     })
 
 

@@ -154,8 +154,9 @@
 }
 
 .status-btn:hover::before {
-    opacity: 0.1;
+    opacity: 0.3;
 }
+
 
 .status-btn.active {
     color: #fff !important;
@@ -170,17 +171,46 @@
     transform: translateY(-3px);
 }
 
-/* Status-specific active colors */
+/* STATUS SPECIFIC COLORS - Always visible backgrounds */
+.status-draft::before {
+    background: rgba(253, 126, 20, 0.1); /* Light orange background always */
+}
+
+.status-published::before {
+    background: rgba(25, 135, 84, 0.1); /* Light green background always */
+}
+
+.status-archived::before {
+    background: rgba(220, 53, 69, 0.1); /* Light red background always */
+}
+
 .status-draft.active::before {
-    background: #fd7e14; /* Orange */
+    background: #fd7e14; /* Solid orange when active */
+    opacity: 1 !important;
 }
 
 .status-published.active::before {
-    background: #198754; /* Green */
+    background: #198754; /* Solid green when active */
+    opacity: 1 !important;
 }
 
 .status-archived.active::before {
-    background: #dc3545; /* Red */
+    background: #dc3545; /* Solid red when active */
+    opacity: 1 !important;
+}
+
+
+/* Status-specific borders for better visual distinction */
+.status-draft {
+    border-color: rgba(253, 126, 20, 0.3) !important;
+}
+
+.status-published {
+    border-color: rgba(25, 135, 84, 0.3) !important;
+}
+
+.status-archived {
+    border-color: rgba(220, 53, 69, 0.3) !important;
 }
 
 .status-draft.active {
@@ -188,17 +218,9 @@
     box-shadow: 0 4px 12px rgba(253, 126, 20, 0.3);
 }
 
-.status-draft.active:hover {
-    box-shadow: 0 6px 16px rgba(253, 126, 20, 0.4);
-}
-
 .status-published.active {
     border-color: #198754 !important;
     box-shadow: 0 4px 12px rgba(25, 135, 84, 0.3);
-}
-
-.status-published.active:hover {
-    box-shadow: 0 6px 16px rgba(25, 135, 84, 0.4);
 }
 
 .status-archived.active {
@@ -206,9 +228,6 @@
     box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
 }
 
-.status-archived.active:hover {
-    box-shadow: 0 6px 16px rgba(220, 53, 69, 0.4);
-}
 
 
 
@@ -233,10 +252,11 @@
     font-weight: 500;
     text-align: center;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.2s ease-in-out;
     text-align: center;
     position: relative;
     overflow: hidden;
+    user-select: none;
 }
 
 .category-pill::before {
@@ -263,15 +283,19 @@
 }
 
 .category-pill.active {
+    background: #0d6efd !important;
     border-color: #0d6efd !important;
     color: #fff !important;
     transform: translateY(-1px);
     box-shadow: 0 2px 8px rgba(13, 110, 253, 0.3);
+    transition: all 0.15s ease-in-out;
 }
 
 .category-pill.active::before {
-    opacity: 1;
+    opacity: 1 !important;
 }
+
+
 
 .category-pill.active:hover {
     transform: translateY(-2px);
