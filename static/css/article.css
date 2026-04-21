@@ -49,19 +49,17 @@
 .article-header {
     background: #fff;
     border-bottom: 1px solid var(--border-color);
-    padding: 2rem 0;
-    margin-bottom: 2rem;
+    padding: 50px 0;
 }
 
 .header-content {
-    padding: 0 1rem;
+    padding: 0 70px;
 }
 
 .article-title {
-    font-size: 2.5rem;
-    font-weight: 700;
+    font-size: 35px !important;
+    font-weight: 800;
     color: var(--text-dark);
-    margin-bottom: 1rem;
     line-height: 1.2;
     letter-spacing: -0.5px;
 }
@@ -69,7 +67,7 @@
 .article-meta {
     display: flex;
     flex-wrap: wrap;
-    gap: 1.5rem;
+    gap: 24px;
     align-items: center;
 }
 
@@ -77,8 +75,8 @@
 .meta-category {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    font-size: 1rem;
+    gap: 8px;
+    font-size: 16px;
     color: var(--text-light);
     font-weight: 500;
 }
@@ -90,18 +88,20 @@
 
 /* ============= MAIN CONTENT AREA ============= */
 .article-main {
-    padding: 2rem 1rem;
+    display: flex;
+    gap: 32px;
+    padding: 10px 60px;
 }
 
 .article-content {
     background: #fff;
-    padding: 2rem;
+    padding: 20px 32px;
     border-radius: 12px;
     box-shadow: var(--shadow-sm);
 }
 
 .article-body {
-    font-size: 1.125rem;
+    font-size: 18px;
     line-height: 1.8;
     color: var(--text-dark);
     letter-spacing: 0.3px;
@@ -109,7 +109,7 @@
 }
 
 .article-body p {
-    margin-bottom: 1.5rem;
+    margin-bottom: 24px;
 }
 
 .article-body p:last-child {
@@ -118,28 +118,24 @@
 
 /* Media Section (additional images and text) */
 .media-section {
-    margin-top: 2rem;
-    padding-top: 2rem;
-    border-top: 2px solid var(--light-bg);
+    margin: 20px 0 !important;
+
 }
 
 .media-image {
     width: 100%;
     height: auto;
     border-radius: 8px;
-    margin-bottom: 1rem;
+    margin: 20px 0 !important;
     box-shadow: var(--shadow-md);
 }
 
 .section-text {
-    font-size: 1rem;
+    font-size: 18px;
     line-height: 1.7;
-    color: var(--text-light);
-    padding: 1rem;
-    background: var(--light-bg);
-    border-left: 4px solid var(--primary-color);
+    color: black;
     border-radius: 4px;
-}
+} 
 
 .section-text p {
     margin-bottom: 1rem;
@@ -154,14 +150,14 @@
     background: #fff;
     border-radius: 12px;
     box-shadow: var(--shadow-sm);
-    padding: 1.5rem;
-    margin-bottom: 2rem;
+    padding: 24px;
+    margin-bottom: 32px;
     overflow: hidden;
 }
 
 .sidebar-header {
-    margin-bottom: 1.5rem;
-    padding-bottom: 1rem;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
     border-bottom: 2px solid var(--light-bg);
 }
 
@@ -169,7 +165,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-size: 1.375rem;
+    font-size: 22px;
     font-weight: 700;
     color: var(--text-dark);
     margin: 0;
@@ -181,22 +177,22 @@
 }
 
 .title-icon {
-    font-size: 1.5rem;
+    font-size: 24px;
     color: var(--primary-color);
-    margin-left: 0.5rem;
+    margin-left: 8px;
 }
 
 /* ============= NEWS CARD SIDEBAR ============= */
 .news-list {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 16px;
 }
 
 .news-card-sidebar {
     display: flex;
-    gap: 1rem;
-    padding: 1rem;
+    gap: 16px;
+    padding: 16px;
     background: var(--light-bg);
     border-radius: 8px;
     text-decoration: none;
@@ -243,12 +239,12 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 8px;
     position: relative;
 }
 
 .card-title {
-    font-size: 0.95rem;
+    font-size: 15px;
     font-weight: 600;
     color: var(--text-dark);
     margin: 0;
@@ -262,17 +258,17 @@
 .card-meta {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 8px;
 }
 
 .card-date {
-    font-size: 0.8rem;
+    font-size: 13px;
     color: var(--text-light);
     font-weight: 500;
 }
 
 .card-text {
-    font-size: 0.85rem;
+    font-size: 14px;
     color: var(--text-light);
     line-height: 1.4;
     display: -webkit-box;
@@ -291,7 +287,7 @@
     background: var(--primary-color);
     color: white;
     border-radius: 50%;
-    font-size: 0.75rem;
+    font-size: 12px;
     transition: var(--transition);
     margin-top: auto;
 }
@@ -315,63 +311,69 @@
 }
 
 /* Medium screens */
-@media (max-width: 991.98px) {
+@media (max-width: 991.98px) and (min-width: 768px) {
+    .header-content {
+        padding: 0 20px;
+    }
     .article-title {
-        font-size: 2rem;
+        font-size: 28px;
     }
 
     .article-body {
-        font-size: 1rem;
+        font-size: 16px;
     }
 
     .article-content {
-        padding: 1.5rem;
+        padding: 24px;
     }
 }
 
 /* Small screens */
 @media (max-width: 767.98px) {
+    .header-content {
+        padding: 0 20px;
+    }
     .article-header {
-        padding: 1.5rem 0;
-        margin-bottom: 1.5rem;
+        margin-bottom: 24px;
     }
 
     .article-title {
-        font-size: 1.75rem;
-        margin-bottom: 1rem;
+        margin-bottom: 16px;
+        padding: 0 20px;
+        font-size: 26px;
     }
 
     .article-meta {
-        gap: 1rem;
-        font-size: 0.9rem;
+        gap: 16px;
+        font-size: 14px;
     }
 
     .article-main {
-        padding: 1rem 0.5rem;
+        padding: 16px 8px;
     }
 
     .article-content {
-        padding: 1rem;
-        margin-bottom: 1.5rem;
+        padding: 16px;
+        margin-bottom: 24px;
     }
 
     .article-body {
-        font-size: 1rem;
+        font-size: 16px;
         line-height: 1.6;
     }
 
     .sidebar-section {
-        margin-bottom: 1.5rem;
-        padding: 1rem;
+        margin-bottom: 24px;
+        padding: 16px;
     }
 
     .sidebar-title {
-        font-size: 1.125rem;
+        font-size: 18px;
     }
 
     .news-card-sidebar {
-        padding: 0.75rem;
-        gap: 0.75rem;
+        padding: 12px;
+        gap: 12px;
     }
 
     .news-card-left {
@@ -380,11 +382,11 @@
     }
 
     .card-title {
-        font-size: 0.9rem;
+        font-size: 14px;
     }
 
     .card-text {
-        font-size: 0.8rem;
+        font-size: 13px;
     }
 }
 
@@ -395,25 +397,25 @@
     }
 
     .article-title {
-        font-size: 1.5rem;
+        font-size: 24px;
     }
 
     .article-body {
-        font-size: 0.95rem;
+        font-size: 15px;
         line-height: 1.5;
     }
 
     .article-content {
-        padding: 0.75rem;
+        padding: 12px;
     }
 
     .media-section {
-        margin-top: 1.5rem;
-        padding-top: 1rem;
+        margin-top: 24px;
+        padding-top: 16px;
     }
 
     .sidebar-section {
-        padding: 0.75rem;
+        padding: 12px;
     }
 
     .news-card-sidebar {
@@ -427,7 +429,7 @@
     }
 
     .news-list {
-        gap: 0.75rem;
+        gap: 12px;
     }
 }
 

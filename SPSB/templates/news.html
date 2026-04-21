@@ -22,7 +22,7 @@
             </span>
         </div>
 
-<div class="row">
+        <div class="row">
             {% for post in news_posts %}
                 <div class="col-12 col-md-6 col-lg-4 mb-4 card-container">
                     <div class="card h-100 shadow-sm news-card-modern" data-bs-toggle="modal" data-bs-target="#modal{{ post.id }}">
@@ -48,7 +48,7 @@
                             <!-- Category -->
                             {% if post.category %}
                                 <span class="badge bg-primary mb-1">
-                                    {{ post.category.name | title }}
+                                    <i class="fas fa-tag"></i> {{ post.category.name | title }}
                                 </span>
                             {% endif %}
                             {% if request.user.is_staff %}

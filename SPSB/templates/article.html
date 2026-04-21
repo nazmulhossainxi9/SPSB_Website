@@ -10,9 +10,9 @@
 {% block content %}
 <div class="article-container">
     <!-- Banner Section (16:9) -->
-    <div class="banner-section">
+    <div class="container-fluid p-0 banner-section">
         {% if banner_image %}
-            <img src="{{ banner_image.media.file.url }}" alt="{{ post.title }}" class="banner-image" loading="lazy">
+            <img src="{{ banner_image.media.file.url }}" alt="{{ post.title }}" class=" container-fluid banner-image" loading="lazy">
         {% else %}
             <div class="banner-placeholder">
                 <i class="fas fa-image"></i>
@@ -22,18 +22,18 @@
 
     <!-- Article Header -->
     <div class="article-header">
-        <div class="container-fluid">
+        <div class="p-0">
             <div class="header-content">
-                <h1 class="article-title">{{ post.title }}</h1>
+                <h3 class="article-title">{{ post.title }}</h3>
                 <div class="article-meta">
                     <span class="meta-date">
                         <i class="far fa-calendar"></i>
-                        {{ post.created_at|date:"M d, Y" }}
+                        {{ post.created_at|date:"D, d M Y" }}
                     </span>
                     {% if post.category %}
                         <span class="meta-category">
                             <i class="fas fa-tag"></i>
-                            {{ post.category.name }}
+                            {{ post.category.name | title }}
                         </span>
                     {% endif %}
                 </div>
@@ -42,13 +42,13 @@
     </div>
 
     <!-- Main Content -->
-    <div class="container-fluid article-main">
+    <div class="article-main">
         <div class="row">
             <!-- Left Column - Article Content -->
             <div class="col-lg-8">
                 <article class="article-content">
-                    <div class="article-body">
-                        {{ post.content|linebreaks }}
+                    <div class="article-body section-text">
+                        {{ post.content }}
                     </div>
 
                     <!-- Additional Media Section -->
@@ -59,9 +59,12 @@
                                     {% if pm.media %}
                                         <img src="{{ pm.media.file.url }}" alt="{{ pm.media.alt_text }}" class="media-image" loading="lazy">
                                     {% endif %}
+                                    {% if pm.media.caption %}
+                                        <p class="media-caption">{{ pm.media.caption }}</p>
+                                    {% endif %}
                                     {% if pm.section_text %}
                                         <div class="section-text">
-                                            {{ pm.section_text|linebreaks }}
+                                            {{ pm.section_text }}
                                         </div>
                                     {% endif %}
                                 </div>
@@ -102,9 +105,6 @@
                                         <span class="card-date">{{ news.created_at|date:"M d, Y" }}</span>
                                     </div>
                                     <p class="card-text">{{ news.content|truncatewords:15 }}</p>
-                                    <span class="read-more">
-                                        <i class="fas fa-arrow-right"></i>
-                                    </span>
                                 </div>
                             </a>
                         {% endfor %}
@@ -141,9 +141,6 @@
                                         <span class="card-date">{{ news.created_at|date:"M d, Y" }}</span>
                                     </div>
                                     <p class="card-text">{{ news.content|truncatewords:15 }}</p>
-                                    <span class="read-more">
-                                        <i class="fas fa-arrow-right"></i>
-                                    </span>
                                 </div>
                             </a>
                         {% endfor %}
