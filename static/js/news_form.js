@@ -179,42 +179,77 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     if (addButton && container) {
-        addButton.addEventListener('click', function () {
+        addButton.addEventListener('click', function (e) {
+            e.preventDefault();
 
             const totalForms = document.getElementById('id_post_media-TOTAL_FORMS');
+            const maxForms = document.getElementById('id_post_media-MAX_NUM_FORMS');
+            
             let formCount = parseInt(totalForms.value, 10);
+            let maxFormCount = maxForms ? parseInt(maxForms.value, 10) : 1000;
 
-            let newForm = container.children[0].cloneNode(true);
+            if (formCount >= maxFormCount) {
+                alert('Maximum number of forms reached!');
+                return;
+            }
 
-            newForm.innerHTML = newForm.innerHTML.replace(/-\d+-/g, `-${formCount}-`);
+            // Clone the first form if it exists, otherwise create a new one
+            let template = container.querySelector('.formset-item');
+            if (!template) {
+                console.error('No formset item template found');
+                return;
+            }
 
-            // reset inputs
+            let newForm = template.cloneNode(true);
+
+            // Replace all form indices with the new count
+            const oldIndex = formCount - 1;
+            newForm.innerHTML = newForm.innerHTML.replace(
+                new RegExp(`(id|name)="([^"]*)-${oldIndex}-([^"]*)"`, 'g'),
+                `$1="$2-${formCount}-$3"`
+            );
+
+            // Also replace data attributes if any
+            newForm.innerHTML = newForm.innerHTML.replace(
+                new RegExp(`data-formset-form-num="${oldIndex}"`, 'g'),
+                `data-formset-form-num="${formCount}"`
+            );
+
+            // Reset all inputs
             newForm.querySelectorAll('input, textarea, select').forEach(el => {
-
-                if (el.type === "checkbox") {
+                if (el.type === 'checkbox' || el.type === 'radio') {
                     el.checked = false;
-                } else if (el.name && el.name.endsWith('-DELETE')) {
-                    el.checked = false;
+                } else if (el.name && (el.name.endsWith('-DELETE') || el.name.endsWith('-id'))) {
+                    // Don't change DELETE and id fields for new forms
+                    if (el.name.endsWith('-DELETE')) {
+                        el.checked = false;
+                    } else {
+                        el.value = '';
+                    }
                 } else {
-                    el.value = "";
+                    el.value = '';
                 }
-
             });
 
-            // clear preview images
+            // Clear preview images
             newForm.querySelectorAll('img.preview-img').forEach(img => img.remove());
 
-            // reset order
+            // Clear banner indicators
+            newForm.querySelectorAll('.banner-indicator').forEach(el => el.remove());
+            newForm.classList.remove('banner-section-active');
+
+            // Update order field
             const orderInput = newForm.querySelector('[name$="-order"]');
             if (orderInput) orderInput.value = formCount;
 
-            // reset media
-            const mediaInput = newForm.querySelector('[name$="-media"]');
-            if (mediaInput) mediaInput.value = '';
-
+            // Add to container
             container.appendChild(newForm);
+
+            // Update total forms count
             totalForms.value = formCount + 1;
 
+            // Trigger change event to update any listeners
+            newForm.dispatchEvent(new Event('change', { bubbles: true }));
         });
     }
 

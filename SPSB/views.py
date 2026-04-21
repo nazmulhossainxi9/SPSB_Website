@@ -4,6 +4,7 @@ from django.db import transaction
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import NewsPost, Category, Media, NewsPostMedia
 from .forms import NewsPostForm
+from django.views.decorators.cache import never_cache
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -20,6 +21,7 @@ def home(request):
 
 from django.core.paginator import Paginator
 
+@never_cache
 def news(request):
     category_filter = request.GET.get('category')
     categories = Category.objects.all()
@@ -178,6 +180,8 @@ def article(request, id):
         'recent_posts': recent_posts,
     })
 
+
+
 @login_required
 def dashboard(request):
     if not request.user.is_authenticated:
@@ -201,8 +205,10 @@ def delete_post(request, id):
     return redirect('news')
 
     
-
+@never_cache
 def login_view(request):
+    if request.user.is_authenticated:
+        return redirect('news')
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
@@ -221,6 +227,7 @@ def login_view(request):
         form = AuthenticationForm()
     return render(request, 'login.html', {'form': form})
 
+@never_cache
 @login_required
 def logout_view(request):
     logout(request)
