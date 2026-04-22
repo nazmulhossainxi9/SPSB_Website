@@ -1,8 +1,9 @@
 from django.http import JsonResponse
 from django.db import transaction
+import pandas as pd
 
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import NewsPost, Category, Media, NewsPostMedia
+from .models import NewsPost, Category, Media, NewsPostMedia, Volunteer, CommitteeMember
 from .forms import NewsPostForm
 from django.views.decorators.cache import never_cache
 from django.contrib.auth.decorators import login_required
@@ -174,20 +175,204 @@ def article(request, id):
     # Get banner image (the one marked as banner)
     banner_image = post.post_media.filter(is_banner=True).first()
 
+    # Get banner image (the one marked as banner)
+    banner_image = post.post_media.filter(is_banner=True).first()
+
+    # Get caption: from banner if exists, else from first section image
+    if banner_image:
+        caption = banner_image.media.caption if banner_image.media.caption else ''
+    else:
+        first_section = post.post_media.filter(is_banner=False).first()
+        caption = first_section.media.caption if first_section and first_section.media.caption else ''
+
     return render(request, 'article.html', {
         'post': post,
         'banner_image': banner_image,
         'same_category_posts': same_category_posts,
         'recent_posts': recent_posts,
+        "caption": caption,
     })
 
 
 def volunteers(request):
-    return render(request, 'volunteers.html')
+    volunteers = Volunteer.objects.filter(is_public=True)
+    print(volunteers[0].username,
+          volunteers[0].first_name,
+          volunteers[0].last_name,
+          volunteers[0].email,
+          volunteers[0].volunteer_year,
+          volunteers[0].role,
+          volunteers[0].institution,
+          volunteers[0].degree,
+          volunteers[0].phone_number,
+          volunteers[0].status,
+          volunteers[0].added_by,
+          volunteers[0].created_at,
+          volunteers[0].updated_at,
+          volunteers[0].is_public,
+          volunteers[0].profile_image)
+    return render(request, 'volunteers.html', {'volunteers': volunteers})
+
+def clean_value(value, default='-'):
+    """
+    Handles NaN, empty, None safely
+    """
+    if pd.isna(value):
+        return default
+    value = str(value).strip()
+    return value if value else default
+
+
+@login_required
+def upload_volunteers_excel(request):
+    if request.method == 'POST' and request.FILES.get('file'):
+        excel_file = request.FILES['file']
+
+        # ✅ File validation
+        if not excel_file.name.endswith('.xlsx'):
+            messages.error(request, "Only .xlsx files are allowed!")
+            return redirect('volunteers')
+
+        try:
+            df = pd.read_excel(excel_file)
+
+            # ✅ Required columns
+            required_columns = ['username', 'first_name', 'last_name', 'email', 'volunteer_year']
+
+            for col in required_columns:
+                if col not in df.columns:
+                    messages.error(request, f"Missing column: {col}")
+                    return redirect('volunteers')
+
+            # ✅ Counters (IMPORTANT for debugging)
+            created_count = 0
+            skipped_count = 0
+            duplicate_count = 0
+
+            volunteers_to_create = []
+
+            with transaction.atomic():
+                for _, row in df.iterrows():
+
+                    username = clean_value(row.get('username'), default='')
+                    email = clean_value(row.get('email'), default='')
+
+                    # ❌ Skip if no username
+                    if not username:
+                        skipped_count += 1
+                        continue
+
+                    # ❌ Skip duplicates
+                    if Volunteer.objects.filter(username=username).exists():
+                        duplicate_count += 1
+                        continue
+
+                    try:
+                        volunteer_year = int(row.get('volunteer_year', 2025))
+                    except:
+                        volunteer_year = 2025
+
+                    volunteer = Volunteer(
+                        username=username,
+                        first_name=clean_value(row.get('first_name')),
+                        last_name=clean_value(row.get('last_name')),
+                        email=email if email != '-' else f"{username}@example.com",
+                        volunteer_year=volunteer_year,
+
+                        role=clean_value(row.get('role')),
+                        institution=clean_value(row.get('institution')),
+                        degree=clean_value(row.get('degree')),
+                        phone_number=clean_value(row.get('phone_number')),
+
+                        # 🔥 IMPORTANT FIXES
+                        is_public=True,
+                        status='active',
+
+                        added_by=request.user
+                    )
+
+                    volunteers_to_create.append(volunteer)
+                    created_count += 1
+
+                # ✅ Bulk insert
+                Volunteer.objects.bulk_create(volunteers_to_create)
+
+            # ✅ Final message (VERY IMPORTANT)
+            messages.success(
+                request,
+                f"Upload Complete → Created: {created_count}, Skipped: {skipped_count}, Duplicates: {duplicate_count}"
+            )
+
+        except Exception as e:
+            messages.error(request, f"Upload failed: {str(e)}")
+
+        return redirect('volunteers')
+
+    return redirect('volunteers')
 
 def committees(request):
-    return render(request, 'committees.html')
+    committees = CommitteeMember.objects.filter(is_public=True)
+    return render(request, 'committees.html', {'committees': committees})
 
+@login_required
+def upload_committee_excel(request):
+    if request.method == 'POST' and request.FILES.get('file'):
+        excel_file = request.FILES['file']
+
+        if not excel_file.name.endswith('.xlsx'):
+            messages.error(request, "Only .xlsx files are allowed!")
+            return redirect('committees')
+
+        try:
+            df = pd.read_excel(excel_file)
+
+            required_columns = ['username', 'first_name', 'last_name', 'email', 'committee_year']
+
+            for col in required_columns:
+                if col not in df.columns:
+                    messages.error(request, f"Missing column: {col}")
+                    return redirect('committees')
+
+            members_to_create = []
+
+            with transaction.atomic():
+                for _, row in df.iterrows():
+
+                    username = str(row.get('username', '')).strip()
+                    email = str(row.get('email', '')).strip()
+
+                    if not username:
+                        continue
+
+                    if CommitteeMember.objects.filter(username=username).exists():
+                        continue
+
+                    member = CommitteeMember(
+                        username=username,
+                        first_name=row.get('first_name', '-') or '-',
+                        last_name=row.get('last_name', '-') or '-',
+                        email=email if email else f"{username}@example.com",
+                        committee_year=int(row.get('committee_year', 2025)),
+
+                        position=row.get('position', 'member'),
+                        department=row.get('department', '-'),
+                        phone_number=row.get('phone_number', '-'),
+
+                        added_by=request.user
+                    )
+
+                    members_to_create.append(member)
+
+                CommitteeMember.objects.bulk_create(members_to_create)
+
+            messages.success(request, f"{len(members_to_create)} Committee members uploaded!")
+
+        except Exception as e:
+            messages.error(request, f"Error: {str(e)}")
+
+        return redirect('committees')
+
+    return redirect('committees')
 
 
 @login_required

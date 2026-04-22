@@ -14,7 +14,8 @@
         <!-- Category Filter -->
         <div class="mb-4 d-flex justify-content-center filter-container w-100">
             <span class="d-flex flex-wrap gap-2 filter align-items-center">
-                <span><i class="fa-solid fa-sliders"></i></span>
+                
+                <a href="{% url 'news' %}" class="btn"><span><i class="fa-solid fa-sliders"></i></span></a>
                 <a href="{% url 'news' %}" class="btn {% if not selected_category %}active{% endif %}">All</a>
                 {% for cat in categories %}
                     <a href="?category={{ cat.name }}" class="btn {% if selected_category == cat.name %}active{% endif %}">{{ cat.name|title }}</a>

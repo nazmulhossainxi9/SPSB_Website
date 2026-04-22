@@ -14,6 +14,7 @@
         <div class="container-fluid p-0 banner-section">
             {% if banner_image %}
                 <img src="{{ banner_image.media.file.url }}" alt="{{ post.title }}" class=" banner-image" loading="lazy">
+                
             {% else %}
                 <div class="banner-placeholder">
                     <i class="fas fa-image"></i>
@@ -61,9 +62,7 @@
                                     {% if pm.media %}
                                         <img src="{{ pm.media.file.url }}" alt="{{ pm.media.alt_text }}" class="media-image" loading="lazy">
                                     {% endif %}
-                                    {% if pm.media.caption %}
-                                        <p class="media-caption">{{ pm.media.caption }}</p>
-                                    {% endif %}
+                                    <p class="media-caption">{{ caption }}</p>
                                     {% if pm.section_text %}
                                         <div class="section-text">
                                             {{ pm.section_text }}
