@@ -148,6 +148,7 @@ def create_or_edit_post(request, pk=None):
         'formset': formset
     })
 
+@never_cache
 def article(request, id):
     post = get_object_or_404(NewsPost, id=id)
 
@@ -179,6 +180,13 @@ def article(request, id):
         'same_category_posts': same_category_posts,
         'recent_posts': recent_posts,
     })
+
+
+def volunteers(request):
+    return render(request, 'volunteers.html')
+
+def committees(request):
+    return render(request, 'committees.html')
 
 
 

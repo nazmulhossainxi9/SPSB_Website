@@ -49,8 +49,8 @@
 /* ============= ARTICLE HEADER ============= */
 .article-header {
     background: #fff;
-    border-bottom: 1px solid var(--border-color);
-    padding: 50px 0;
+    /* border-bottom: 1px solid var(--border-color); */
+    padding: 50px 0 0 0;
 }
 
 .header-content {
