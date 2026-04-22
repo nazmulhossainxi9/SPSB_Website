@@ -101,13 +101,7 @@
     box-shadow: var(--shadow-sm);
 }
 
-.article-body {
-    font-size: 18px;
-    line-height: 1.8;
-    color: var(--text-dark);
-    letter-spacing: 0.3px;
-    text-align: justify;
-}
+
 
 .article-body p {
     margin-bottom: 24px;
@@ -118,16 +112,13 @@
 }
 
 /* Media Section (additional images and text) */
-.media-section {
-    margin: 20px 0 !important;
 
-}
 
 .media-image {
     width: 100%;
     height: auto;
     border-radius: 8px;
-    margin: 20px 0 !important;
+    margin: 20px 0 30px 0 !important;
     box-shadow: var(--shadow-md);
 }
 
@@ -136,6 +127,7 @@
     line-height: 1.7;
     color: black;
     border-radius: 4px;
+    text-align: justify;
 } 
 
 .section-text p {

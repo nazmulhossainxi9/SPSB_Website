@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import inlineformset_factory
-from .models import NewsPost, Media, NewsPostMedia
+from .models import NewsPost, Media, NewsPostMedia, Volunteer, CommitteeMember
 
 
 # =========================

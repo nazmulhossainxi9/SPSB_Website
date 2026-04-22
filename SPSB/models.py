@@ -147,6 +147,12 @@ class Volunteer(models.Model):
         ('past', 'Past Volunteer'),
     ]
 
+    username = models.CharField(
+        max_length=20,
+        unique=True,
+        help_text="Unique identifier provided via Excel",
+        default="",
+    )
     # ========== PUBLIC DATA (Visible on website/public profile) ==========
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
@@ -256,14 +262,27 @@ class Volunteer(models.Model):
 
 # Committee Member Model - Similar structure to volunteers but for leadership roles
 class CommitteeMember(models.Model):
+
+    username = models.CharField(
+        max_length=20,
+        unique=True,
+        help_text="Unique identifier provided via Excel",
+        default="",
+    )
+
     POSITION_LEVEL = [
         ('president', 'President'),
         ('vice_president', 'Vice President'),
         ('secretary', 'Secretary'),
+        ('general_secretary', 'General Secretary'),
+        ('joint_secretary', 'Joint Secretary'),
         ('treasurer', 'Treasurer'),
         ('coordinator', 'Coordinator'),
-        ('lead', 'Team Lead'),
+        ('program_officer', 'Program Officer'),
+        ('senior_program_officer', 'Senior Program Officer'),
+        ('program_associate', 'Program Associate'),
         ('member', 'Member'),
+        ('academic_councilor', 'Academic Councilor'),
     ]
     
     STATUS_CHOICES = [

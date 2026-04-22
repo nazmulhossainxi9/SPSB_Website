@@ -9,7 +9,159 @@
 
 {% block content %}
     <div class="container">
-        <h1>Volunteers</h1>
-        <p>Welcome to the Volunteers page!</p>
+        <h2 class="text-center my-4">Our Volunteers</h2>
+        {% if request.user.is_staff %}
+            <div class="text-center mb-4">
+                <form method="POST" action="{% url 'upload_volunteers_excel' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <span>
+                        <input type="file" name="file" accept=".xlsx" required class="form-control mb-2 w-auto d-inline-block">
+                    </span>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        Upload Volunteers Excel
+                    </button>
+                </form>
+            </div>
+        {% endif %}
     </div>
+
+
+    <div class="container mt-4">
+        <!-- Year Filter -->
+        <div class="mb-4 d-flex justify-content-center filter-container w-100">
+            <span class="d-flex flex-wrap gap-2 filter align-items-center">
+                <span><i class="fa-solid fa-sliders"></i></span>
+                <a href="{% url 'volunteers' %}" class="btn {% if not volunteer_year %}active{% endif %}">All</a>
+                {% for year in volunteer_year %}
+                    <a href="?year={{ year }}" class="btn {% if selected_year == year %}active{% endif %}">{{ year }}</a>
+                {% endfor %}
+            </span>
+        </div>
+
+        <div class="row">
+            {% for volunteer in volunteers %}
+                <div class="col-12 col-md-6 col-lg-3 mb-4 card-container">
+                    <div class="card h-100 shadow-sm news-card-modern" data-bs-toggle="modal" data-bs-target="#modal{{ post.id }}">
+                        <!-- Image -->
+                        {% with volunteer.profile_image as pm %}
+                            {% if pm %}
+                                <img src="{{ pm.url }}" class="card-img-top" style="height:200px; object-fit:cover;">
+                            {% else %}
+                                <img src="/static/default.jpg" class="card-img-top">
+                            {% endif %}
+                        {% endwith %}
+
+                        <div class="card-body">
+                            <!-- Title -->
+                            <h5 class="card-title">{{ volunteer.first_name }} {{ volunteer.last_name }}</h5>
+
+                            <p class="card-text mb-1">
+                            <!-- Date -->
+                                <small class="text-muted">
+                                    {{ volunteer.institution }}
+                                </small>
+                            </p>
+                            <!-- Category -->
+                            {% if volunteer.role %}
+                                <span class="badge bg-primary mb-1">
+                                    <i class="fas fa-tag"></i> {{ volunteer.role | title }}
+                                </span>
+                            {% endif %}
+                            {% if request.user.is_staff %}
+                                {% if volunteer.status == "active"%}
+                                    <span class="badge bg-success mb-1">
+                                        {{ volunteer.status | title }}
+                                    </span>
+                                    {% elif volunteer.status == "past" %}
+                                        <span class="badge bg-info mb-1">
+                                            Past Volunteer
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-danger mb-1">
+                                            {{ volunteer.status | title }}
+                                        </span>
+                            {% endif %}
+                            {% endif %}
+
+                            <!-- Admin Buttons -->
+                            {% comment %} {% if request.user.is_staff %}
+                                <span class="position-absolute end-0 mx-1" onclick="event.stopPropagation();">
+                                    <a href="{% url 'edit_post' post.id %}" class="text-primary me-2">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                        </a>
+
+                                    <form method="POST" action="{% url 'delete_post' post.id %}" style="display:inline;">
+                                        {% csrf_token %}
+                                        <button type="submit"
+                                            onclick="return confirm('Are you sure?')"
+                                            class="btn btn-link text-danger p-0 m-0">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </span>
+                            {% endif %} {% endcomment %}
+                            
+                            
+                        </div>
+                        
+                        <div class="article-link">
+                            {% for social_media in volunteer.social_media.all %}
+                                <a href="{{ social_media.url }}" target="_blank" rel="noopener noreferrer" class="btn btn-outline-primary btn-sm me-2">
+                                    <i class="{{ social_media.icon }}"></i>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if page_obj.has_other_pages %}
+        <nav aria-label="News pagination" class="mt-4">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">&laquo;</span>
+                </li>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ num }}</span>
+                        </li>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ num }}{% if selected_category %}&category={{ selected_category }}{% endif %}">{{ num }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">&raquo;</span>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+
+    </div>
+
+
 {% endblock content %}

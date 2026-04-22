@@ -34,6 +34,8 @@ urlpatterns = [
     path("dashboard/", views.dashboard, name="dashboard"),
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
+    path('upload-volunteers/', views.upload_volunteers_excel, name='upload_volunteers_excel'),
+    path('upload-committee/', views.upload_committee_excel, name='upload_committee_excel'),
 ]
 
 
